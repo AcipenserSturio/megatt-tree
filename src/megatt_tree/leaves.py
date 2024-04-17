@@ -1,5 +1,6 @@
 import csv
-from pandas import DataFrame
+import pandas as pd
+from pathlib import Path
 
 LEAVES_PATH = "leaves.csv"
 TREE_PATH = "tree.csv"
@@ -10,12 +11,21 @@ LENGTH = {}
 ROOT = 4250
 ROOT_NAME = "cellular organisms"
 
+OUTPUT = Path("taxa")
+
 def leaves():
+    print("Cleaning output folder")
+    for filepath in OUTPUT.glob("*.csv"):
+        filepath.unlink()
+
     print("Loading leaves file")
-    with open(LEAVES_PATH) as f:
-        reader = csv.reader(f)
-        next(reader) # csv header
-        leaves = [*reader]
+
+    leaves = pd.read_csv(
+        LEAVES_PATH,
+        sep=",",
+        comment="#",
+        skip_blank_lines=True,
+    ).values.tolist()
 
     print("Loading tree")
     with open(TREE_PATH) as f:
@@ -37,7 +47,7 @@ def leaves():
             path.append([PARENT[node], LENGTH[node]])
             node = PARENT[node]
 
-        df = DataFrame(path, columns=[leaf_colloq, "spans"])
+        df = pd.DataFrame(path, columns=[leaf_colloq, "spans"])
 
         offset = ROOT - df["spans"].sum()
         df["mya"] = df["spans"].cumsum() + offset
@@ -45,4 +55,4 @@ def leaves():
         df = df.iloc[::-1]
 
         leaf_file = leaf_colloq.replace(" ", "-").lower()
-        df.to_csv(f"out/{leaf_file}.csv", index=False)
+        df.to_csv(OUTPUT / f"{leaf_file}.csv", index=False)
