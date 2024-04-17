@@ -18,4 +18,6 @@ license = {text = "GPL-3.0"}
 distribution = true
 
 [tool.pdm.scripts]
-build = "python -m megatt_tree"
+help = "python -m megatt_tree --help"
+convert = "python -m megatt_tree --convert"
+leaves = "python -m megatt_tree --leaves"

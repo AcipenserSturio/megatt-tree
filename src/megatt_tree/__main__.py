@@ -1,44 +1,28 @@
-import newick
-from pandas import DataFrame
+import argparse
 
-
-PATH_TREE = "assets/140k/140k-species-tree.nwk"
-PATH_NAMES = "assets/140k/140k-species-map.txt"
-
-BRANCHES = []
-
-NAMES = {}
-
-
-def convert_node(node: newick.Node):
-    for child in node.descendants:
-        id_parent = int(node.name.replace("'", "")) if node.name else 1
-        id_child = int(child.name.replace("'", ""))
-        BRANCHES.append([
-            NAMES[id_parent] if id_parent in NAMES else id_parent,
-            NAMES[id_child] if id_child in NAMES else id_child,
-            child.length,
-        ])
-        convert_node(child)
+from .convert import convert
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        prog="megatt-tree",
+        description="Converts trees from timetree-of-life/MEGA-TT to nicer formats.",
+    )
+    action = parser.add_mutually_exclusive_group(required=True)
+    action.add_argument(
+        "--convert",
+        help="Converts .nwk tree to csv",
+        action="store_true",
+    )
+    action.add_argument(
+        "--leaves",
+        help="Provides a list of branches for given leaves",
+        action="store_true",
+    )
 
-    print(f"Loading {PATH_NAMES}")
-    with open(PATH_NAMES, encoding="utf8") as f:
-        for line in f.readlines():
-            k, v = line.split("=", maxsplit=1)
-            k, v = int(k), v.replace("\n", "")
-            NAMES[k] = v
+    args = parser.parse_args()
 
-    print(f"Loading {PATH_TREE} (this takes a while, be patient and watch your RAM usage)")
-    with open(PATH_TREE, encoding="utf8") as f:
-        tree = newick.load(f)
-
-    print("Converting tree")
-    convert_node(tree[0])
-
-    print("Saving tree")
-    DataFrame(BRANCHES, columns=["Parent", "Child", "Length"]).to_csv("out.csv")
-
-    print("Done")
+    if args.convert:
+        convert()
+    else:
+        print(args)
