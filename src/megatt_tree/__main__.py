@@ -1,6 +1,7 @@
 import argparse
 
 from .convert import convert
+from .leaves import leaves
 
 
 if __name__ == "__main__":
@@ -25,4 +26,4 @@ if __name__ == "__main__":
     if args.convert:
         convert()
     else:
-        print(args)
+        leaves()
