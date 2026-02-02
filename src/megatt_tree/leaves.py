@@ -1,14 +1,18 @@
 import csv
-import pandas as pd
 from pathlib import Path
 
+import pandas as pd
+
+# LEAVES_PATH = "leaves_bib_living.csv"
+# TREE_PATH = "tree_bib.csv"
+# ROOT = 1423
 LEAVES_PATH = "leaves.csv"
 TREE_PATH = "tree.csv"
+ROOT = 4250
 
 PARENT = {}
 LENGTH = {}
 
-ROOT = 4250
 ROOT_NAME = "cellular organisms"
 
 OUTPUT = Path("taxa")
