@@ -1,6 +1,8 @@
 import newick
 from pandas import DataFrame
 
+# From https://github.com/timetree-of-life/MEGA-TT/tree/e7dd1dc869cb2f075a71b892dfdcdfa83b936949/smoke_tests/countRanks/inputs
+
 # PATH_TREE = "assets/140k/140k-species-tree.nwk"
 # PATH_NAMES = "assets/140k/140k-species-map.txt"
 
